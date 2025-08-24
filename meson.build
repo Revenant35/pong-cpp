@@ -12,6 +12,11 @@ public_inc = include_directories('include')
 sources = files(
     'src/Log.cpp',
     'src/Window.cpp',
+    'src/Vec2.cpp',
+    'src/Ball.cpp',
+    'src/Paddle.cpp',
+    'src/GameBoundary.cpp',
+    'src/Game.cpp',
     'src/main.cpp',
 )
 
