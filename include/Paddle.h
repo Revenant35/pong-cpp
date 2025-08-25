@@ -6,21 +6,16 @@
 namespace Pong {
     class Paddle {
     public:
-        Paddle(
-            const Vec2& position
-        );
+        Paddle(const Vec2 &position);
 
-        Paddle(
-            float height,
-            float width,
-            float velocity,
-            const Vec2& position
-        );
+        Paddle(float height, float width, float velocity, const Vec2 &position);
 
         float height;
         float width;
         float velocity;
         Vec2 position;
+
+        void update(bool moveUp, bool moveDown, float deltaTime, float minHeight, float maxHeight);
     };
 } // Pong
 

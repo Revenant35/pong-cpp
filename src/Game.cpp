@@ -5,8 +5,14 @@
 
 #include "Log.h"
 
+namespace Pong {
+    class GameBoundary;
+}
+
 Pong::Game::Game() {
     SDL_Init (SDL_INIT_EVERYTHING);
+
+    this->boundary = std::make_unique<GameBoundary>(600.0f, 800.0f);
 
     this->ball = std::make_unique<Ball>(
         Vec2(400.0f, 300.0f),
@@ -46,19 +52,8 @@ void Pong::Game::update(float delta_time) {
         this->isRunning = false;
     }
 
-    if (input->isPlayer1UpPressed) {
-        player1->position.y -= player1->velocity * delta_time;
-    }
-    if (input->isPlayer1DownPressed) {
-        player1->position.y += player1->velocity * delta_time;
-    }
-
-    if (input->isPlayer2UpPressed) {
-        player2->position.y -= player2->velocity * delta_time;
-    }
-    if (input->isPlayer2DownPressed) {
-        player2->position.y += player2->velocity * delta_time;
-    }
+    player1->update(input->isPlayer1UpPressed, input->isPlayer1DownPressed, delta_time, 0, boundary->height);
+    player2->update(input->isPlayer2UpPressed, input->isPlayer2DownPressed, delta_time, 0, boundary->height);
 
     ball->position += ball->velocity * delta_time;
 
