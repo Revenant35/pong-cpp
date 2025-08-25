@@ -6,6 +6,7 @@
 #include "Ball.h"
 #include "GameInput.h"
 #include "Paddle.h"
+#include "Renderer.h"
 
 namespace Pong {
     class Game {
@@ -21,8 +22,11 @@ namespace Pong {
         std::unique_ptr<Paddle> player1;
         std::unique_ptr<Paddle> player2;
         std::unique_ptr<GameInput> input;
+        std::unique_ptr<Renderer> renderer;
         int score1;
         int score2;
+
+        void render() const;
     };
 } // Pong
 

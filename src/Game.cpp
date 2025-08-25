@@ -29,6 +29,8 @@ Pong::Game::Game() {
 
     this->input = std::make_unique<GameInput>();
 
+    this->renderer = std::make_unique<Renderer>(800, 600);
+
     this->score1 = 0;
     this->score2 = 0;
 }
@@ -59,4 +61,18 @@ void Pong::Game::update(float delta_time) {
     }
 
     ball->position += ball->velocity * delta_time;
+
+    render();
+}
+
+
+void Pong::Game::render() const {
+    renderer->clear();
+
+    renderer->drawPaddle(*player1);
+    renderer->drawPaddle(*player2);
+    renderer->drawBall(*ball);
+    renderer->drawScore(score1, score2);
+
+    renderer->present();
 }

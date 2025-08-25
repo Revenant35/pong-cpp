@@ -15,6 +15,7 @@ sources = files(
     'src/Vec2.cpp',
     'src/Ball.cpp',
     'src/Paddle.cpp',
+    'src/Renderer.cpp',
     'src/GameBoundary.cpp',
     'src/Game.cpp',
     'src/GameInput.cpp',
