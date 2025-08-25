@@ -1,5 +1,5 @@
-#ifndef PONG_GAME_H
-#define PONG_GAME_H
+#ifndef PONG_GAME_BOUNDARY_H
+#define PONG_GAME_BOUNDARY_H
 
 namespace Pong {
     class GameBoundary {
@@ -11,4 +11,4 @@ namespace Pong {
     };
 } // Pong
 
-#endif //PONG_GAME_H
+#endif //PONG_GAME_BOUNDARY_H
