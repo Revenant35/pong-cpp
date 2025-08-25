@@ -1,8 +1,5 @@
 #include "Game.h"
 #include "Log.h"
-#include "Paddle.h"
-#include "Vec2.h"
-#include "Window.h"
 
 int main() {
     Pong::Log::Init();
