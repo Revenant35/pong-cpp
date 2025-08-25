@@ -69,15 +69,11 @@ void Pong::Renderer::drawPaddle(const Paddle& paddle) const {
 void Pong::Renderer::drawBall(const Ball& ball) const {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
 
-    // For a proper circle, you'd need a more complex algorithm
-    // This is a simplified version using a filled square
-    int radius = 10; // You might want to add radius to Ball class
-
     SDL_Rect rect = {
-        static_cast<int>(ball.position.x - radius),
-        static_cast<int>(ball.position.y - radius),
-        radius * 2,
-        radius * 2
+        static_cast<int>(ball.position.x - ball.size / 2),
+        static_cast<int>(ball.position.y - ball.size / 2),
+        static_cast<int>(ball.size),
+        static_cast<int>(ball.size)
     };
 
     SDL_RenderFillRect(renderer, &rect);

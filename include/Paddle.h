@@ -16,6 +16,14 @@ namespace Pong {
         Vec2 position;
 
         void update(bool moveUp, bool moveDown, float deltaTime, float minHeight, float maxHeight);
+
+        float getLeft() const;
+
+        float getRight() const;
+
+        float getTop() const;
+
+        float getBottom() const;
     };
 } // Pong
 

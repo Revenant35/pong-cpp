@@ -29,3 +29,19 @@ void Pong::Paddle::update(
         position.y = std::min(maxHeight - height / 2, newPosition);
     }
 }
+
+float Pong::Paddle::getLeft() const {
+    return position.x - width / 2.0f;
+}
+
+float Pong::Paddle::getRight() const {
+    return position.x + width / 2.0f;
+}
+
+float Pong::Paddle::getTop() const {
+    return position.y - height / 2.0f;
+}
+
+float Pong::Paddle::getBottom() const {
+    return position.y + height / 2.0f;
+}

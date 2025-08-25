@@ -29,7 +29,8 @@ namespace Pong {
         int score2;
 
         void render() const;
-        void updatePaddle(const std::unique_ptr<Paddle> &paddle, bool moveUp, bool moveDown, float deltaTime) const;
+        void handleBallWallCollisions() const;
+        void handleBallPaddleCollisions() const;
     };
 } // Pong
 

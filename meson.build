@@ -18,6 +18,7 @@ sources = files(
     'src/GameBoundary.cpp',
     'src/Game.cpp',
     'src/GameInput.cpp',
+    'src/CollisionDetector.cpp',
     'src/main.cpp',
 )
 

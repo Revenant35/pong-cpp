@@ -3,11 +3,8 @@
 
 #include <SDL.h>
 
+#include "CollisionDetector.h"
 #include "Log.h"
-
-namespace Pong {
-    class GameBoundary;
-}
 
 Pong::Game::Game() {
     SDL_Init (SDL_INIT_EVERYTHING);
@@ -56,6 +53,8 @@ void Pong::Game::update(float delta_time) {
     player2->update(input->isPlayer2UpPressed, input->isPlayer2DownPressed, delta_time, 0, boundary->height);
 
     ball->position += ball->velocity * delta_time;
+    handleBallWallCollisions();
+    handleBallPaddleCollisions();
 
     render();
 }
@@ -70,4 +69,45 @@ void Pong::Game::render() const {
     renderer->drawScore(score1, score2);
 
     renderer->present();
+}
+
+void Pong::Game::handleBallWallCollisions() const {
+    if (CollisionDetector::isCollidingWithBottomWall(*ball, 0.0f)) {
+        ball->position.y = ball->size;
+        ball->reflectVertical();
+    }
+
+    if (CollisionDetector::isCollidingWithTopWall(*ball, boundary->height)) {
+        ball->position.y = boundary->height - ball->size;
+        ball->reflectVertical();
+    }
+
+    if (CollisionDetector::isCollidingWithLeftWall(*ball, 0.0f)) {
+        ball->position.x = ball->size;
+        ball->reflectHorizontal();
+    }
+
+    if (CollisionDetector::isCollidingWithRightWall(*ball, boundary->width)) {
+        ball->position.x = boundary->width - ball->size;
+        ball->reflectHorizontal();
+    }
+}
+
+// TODO: Change circle to be square
+// TODO: Update AABB collision detection
+
+void Pong::Game::handleBallPadsdleCollisions() const {
+    if (CollisionDetector::isColliding(*player1, *ball)) {
+        ball->position.x = player1->getRight();
+        ball->reflectHorizontal();
+        const float hitPosition = (ball->position.y - player1->position.y) / (player1->height / 2.0f);
+        ball->velocity.y = std::clamp(ball->velocity.y + hitPosition * 150.0f, Ball::MIN_VERTICAL_VELOCITY, Ball::MAX_VERTICAL_VELOCITY);
+    }
+
+    if (CollisionDetector::isColliding(*player2, *ball)) {
+        ball->position.x = player2->getLeft();
+        ball->reflectHorizontal();
+        const float hitPosition = (ball->position.y - player2->position.y) / (player2->height / 2.0f);
+        ball->velocity.y = std::clamp(ball->velocity.y + hitPosition * 150.0f, Ball::MIN_VERTICAL_VELOCITY, Ball::MAX_VERTICAL_VELOCITY);
+    }
 }
