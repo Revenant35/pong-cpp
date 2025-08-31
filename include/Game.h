@@ -19,18 +19,20 @@ namespace Pong {
 
         void update(float delta_time);
     private:
-        std::unique_ptr<Ball> ball;
-        std::unique_ptr<Paddle> player1;
-        std::unique_ptr<Paddle> player2;
-        std::unique_ptr<GameBoundary> boundary;
-        std::unique_ptr<GameInput> input;
-        std::unique_ptr<Renderer> renderer;
+        Ball ball;
+        Paddle player1;
+        Paddle player2;
+        GameBoundary boundary;
+        GameInput input;
+        Renderer renderer;
         int score1;
         int score2;
 
         void render() const;
-        void handleBallWallCollisions() const;
-        void handleBallPaddleCollisions() const;
+        void handleBallWallCollisions();
+        void handleBallPaddleCollisions(const Paddle& paddle);
+
+        void updatePaddles(float deltaTime);
     };
 } // Pong
 

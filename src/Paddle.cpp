@@ -1,47 +1,32 @@
 #include "Paddle.h"
 
-#include <algorithm>
+const float Pong::Paddle::DEFAULT_HEIGHT = 100.0f;
+const float Pong::Paddle::DEFAULT_WIDTH = 20.0f;
 
-Pong::Paddle::Paddle(const float height, const float width, const float velocity, const Vec2& position) : position(position) {
-    this->height = height;
-    this->width = width;
-    this->velocity = velocity;
+Pong::Paddle::Paddle(const Vec2 &position) : collision_box(DEFAULT_HEIGHT, DEFAULT_WIDTH, position.x, position.y),
+                                             position(position) {
+    this->height = DEFAULT_HEIGHT;
+    this->width = DEFAULT_WIDTH;
 }
 
-Pong::Paddle::Paddle(const Vec2& position) : Paddle(100.0f, 20.0f, 300.0f, position) {}
-
-void Pong::Paddle::update(
-    const bool moveUp,
-    const bool moveDown,
-    const float deltaTime,
-    const float minHeight,
-    const float maxHeight
-) {
-    if ((moveUp && moveDown) || (!moveUp && !moveDown)) {
-        return;
-    }
-
-    if (moveUp) {
-        const auto newPosition = position.y - velocity * deltaTime;
-        position.y = std::max(minHeight + height / 2, newPosition);
-    } else {
-        const auto newPosition = position.y + velocity * deltaTime;
-        position.y = std::min(maxHeight - height / 2, newPosition);
-    }
+Pong::CollisionBox Pong::Paddle::getCollisionBox() const {
+    return collision_box;
 }
 
-float Pong::Paddle::getLeft() const {
-    return position.x - width / 2.0f;
+Pong::Vec2 Pong::Paddle::getPosition() const {
+    return position;
 }
 
-float Pong::Paddle::getRight() const {
-    return position.x + width / 2.0f;
+void Pong::Paddle::setPosition(const Vec2 &newPosition) {
+    position = newPosition;
+    collision_box.x = newPosition.x;
+    collision_box.y = newPosition.y;
 }
 
-float Pong::Paddle::getTop() const {
-    return position.y - height / 2.0f;
+float Pong::Paddle::getHeight() const {
+    return height;
 }
 
-float Pong::Paddle::getBottom() const {
-    return position.y + height / 2.0f;
+float Pong::Paddle::getWidth() const {
+    return width;
 }

@@ -1,29 +1,30 @@
 #ifndef PONG_PADDLE_H
 #define PONG_PADDLE_H
 
+#include "CollisionBox.h"
 #include "Vec2.h"
 
 namespace Pong {
     class Paddle {
     public:
+        const static float DEFAULT_HEIGHT;
+        const static float DEFAULT_WIDTH;
+
         Paddle(const Vec2 &position);
 
-        Paddle(float height, float width, float velocity, const Vec2 &position);
+        CollisionBox getCollisionBox() const;
 
+        Vec2 getPosition() const;
+        void setPosition(const Vec2 &newPosition);
+
+        float getHeight() const;
+        float getWidth() const;
+
+    private:
         float height;
         float width;
-        float velocity;
+        CollisionBox collision_box;
         Vec2 position;
-
-        void update(bool moveUp, bool moveDown, float deltaTime, float minHeight, float maxHeight);
-
-        float getLeft() const;
-
-        float getRight() const;
-
-        float getTop() const;
-
-        float getBottom() const;
     };
 } // Pong
 

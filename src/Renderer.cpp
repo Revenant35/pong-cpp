@@ -55,12 +55,15 @@ void Pong::Renderer::present() const {
 
 void Pong::Renderer::drawPaddle(const Paddle& paddle) const {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
+    const auto position = paddle.getPosition();
+    const auto height = paddle.getHeight();
+    const auto width = paddle.getWidth();
 
-    SDL_Rect rect = {
-        static_cast<int>(paddle.position.x - paddle.width/2),
-        static_cast<int>(paddle.position.y - paddle.height/2),
-        static_cast<int>(paddle.width),
-        static_cast<int>(paddle.height)
+    const SDL_Rect rect = {
+        static_cast<int>(position.x - width/2),
+        static_cast<int>(position.y - height/2),
+        static_cast<int>(width),
+        static_cast<int>(height)
     };
 
     SDL_RenderFillRect(renderer, &rect);
@@ -68,12 +71,14 @@ void Pong::Renderer::drawPaddle(const Paddle& paddle) const {
 
 void Pong::Renderer::drawBall(const Ball& ball) const {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
+    const auto position = ball.getPosition();
+    const auto size = ball.getSize();
 
-    SDL_Rect rect = {
-        static_cast<int>(ball.position.x - ball.size / 2),
-        static_cast<int>(ball.position.y - ball.size / 2),
-        static_cast<int>(ball.size),
-        static_cast<int>(ball.size)
+    const SDL_Rect rect = {
+        static_cast<int>(position.x - size / 2),
+        static_cast<int>(position.y - size / 2),
+        static_cast<int>(size),
+        static_cast<int>(size)
     };
 
     SDL_RenderFillRect(renderer, &rect);

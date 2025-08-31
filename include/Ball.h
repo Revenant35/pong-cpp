@@ -2,22 +2,29 @@
 #define PONG_BALL_H
 
 #include "Vec2.h"
+#include "CollisionBox.h"
 
 namespace Pong {
     class Ball {
     public:
-        const static float HORIZONTAL_VELOCITY;
-        const static float MIN_VERTICAL_VELOCITY;
-        const static float MAX_VERTICAL_VELOCITY;
+        const static float DEFAULT_SIZE;
 
         Ball(const Vec2 &position, const Vec2 &velocity);
-        Ball(const Vec2 &position, const Vec2 &velocity, float size);
 
+        CollisionBox getCollisionBox() const;
+
+        Vec2 getPosition() const;
+        void setPosition(const Vec2 &newPosition);
+
+        Vec2 getVelocity() const;
+        void setVelocity(const Vec2 &newVelocity);
+
+        float getSize() const;
+    private:
+        Vec2 position;
+        Vec2 velocity;
+        CollisionBox collision_box;
         float size;
-        Vec2 position, velocity;
-
-        void reflectHorizontal();
-        void reflectVertical();
     };
 } // Pong
 
