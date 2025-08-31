@@ -20,6 +20,7 @@ test_sources = files(
     'test/CollisionBoxTests.cpp',
     'test/Vec2Tests.cpp',
     'test/PaddleTests.cpp',
+    'test/GameBoundaryTests.cpp',
     'test/BallTests.cpp',
 )
 
