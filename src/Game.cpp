@@ -98,13 +98,83 @@ void Pong::Game::handleBallWallCollisions() {
 
 void Pong::Game::handleBallPaddleCollisions(const Paddle& paddle) {
     if (ball.getCollisionBox().overlaps(paddle.getCollisionBox())) {
-        // TODO: Find closest side of paddle, and "reflect" ball off of it.
-        auto ballPosition = ball.getPosition();
-        ballPosition.x = ball.getSize();
-        ball.setPosition(ballPosition);
-
+        // Get positions and dimensions
+        const Vec2 ballPos = ball.getPosition();
+        const Vec2 paddlePos = paddle.getPosition();
+        const float ballSize = ball.getSize();
+        const float paddleWidth = paddle.getWidth();
+        const float paddleHeight = paddle.getHeight();
+        
+        // Calculate paddle boundaries
+        const float paddleLeft = paddlePos.x - paddleWidth/2;
+        const float paddleRight = paddlePos.x + paddleWidth/2;
+        const float paddleTop = paddlePos.y + paddleHeight/2;
+        const float paddleBottom = paddlePos.y - paddleHeight/2;
+        
+        // Calculate penetration depths on each axis
+        const float penetrationLeft = ballPos.x + ballSize - paddleLeft;
+        const float penetrationRight = paddleRight - (ballPos.x - ballSize);
+        const float penetrationTop = paddleTop - (ballPos.y - ballSize);
+        const float penetrationBottom = ballPos.y + ballSize - paddleBottom;
+        
+        // Find minimum penetration to determine collision side
+        float minPenetration = penetrationLeft;
+        enum CollisionSide { LEFT, RIGHT, TOP, BOTTOM } side = LEFT;
+        
+        if (penetrationRight < minPenetration) {
+            minPenetration = penetrationRight;
+            side = RIGHT;
+        }
+        
+        if (penetrationTop < minPenetration) {
+            minPenetration = penetrationTop;
+            side = TOP;
+        }
+        
+        if (penetrationBottom < minPenetration) {
+            minPenetration = penetrationBottom;
+            side = BOTTOM;
+        }
+        
+        // Apply reflection and position correction based on collision side
         auto ballVelocity = ball.getVelocity();
-        ballVelocity.x = -ballVelocity.x;
+        auto newBallPos = ballPos;
+        
+        switch (side) {
+            case LEFT:
+                newBallPos.x = paddleLeft - ballSize;
+                ballVelocity.x = -std::abs(ballVelocity.x); // Ensure moving left
+                break;
+                
+            case RIGHT:
+                newBallPos.x = paddleRight + ballSize;
+                ballVelocity.x = std::abs(ballVelocity.x); // Ensure moving right
+                break;
+                
+            case TOP:
+                newBallPos.y = paddleTop + ballSize;
+                ballVelocity.y = std::abs(ballVelocity.y); // Ensure moving up
+                break;
+                
+            case BOTTOM:
+                newBallPos.y = paddleBottom - ballSize;
+                ballVelocity.y = -std::abs(ballVelocity.y); // Ensure moving down
+                break;
+        }
+        
+        // Add some randomness/angle to the bounce based on where it hit the paddle
+        // (only for horizontal collisions)
+        if (side == LEFT || side == RIGHT) {
+            // Calculate relative hit position on the paddle (-1 to 1, where 0 is center)
+            float relativeHitPos = (ballPos.y - paddlePos.y) / (paddleHeight/2);
+            
+            // Apply y-velocity change based on hit position
+            // This adds more vertical movement when hitting away from the center
+            ballVelocity.y += relativeHitPos * 150.0f;
+        }
+        
+        // Update ball position and velocity
+        ball.setPosition(newBallPos);
         ball.setVelocity(ballVelocity);
     }
 }
