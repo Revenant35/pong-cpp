@@ -19,6 +19,8 @@ lib_sources = files(
 test_sources = files(
     'test/CollisionBoxTests.cpp',
     'test/Vec2Tests.cpp',
+    'test/PaddleTests.cpp',
+    'test/BallTests.cpp',
 )
 
 exec_sources = files(
