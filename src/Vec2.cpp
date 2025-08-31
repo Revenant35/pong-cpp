@@ -1,6 +1,10 @@
 #include <cmath>
 #include "Vec2.h"
 
+Pong::Vec2 Pong::Vec2::Zero() {
+    return Vec2(0.0f, 0.0f);
+}
+
 Pong::Vec2::Vec2(const float x, const float y) {
     this->x = x;
     this->y = y;

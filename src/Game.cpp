@@ -104,75 +104,85 @@ void Pong::Game::handleBallPaddleCollisions(const Paddle& paddle) {
         const float ballSize = ball.getSize();
         const float paddleWidth = paddle.getWidth();
         const float paddleHeight = paddle.getHeight();
-        
+
         // Calculate paddle boundaries
         const float paddleLeft = paddlePos.x - paddleWidth/2;
         const float paddleRight = paddlePos.x + paddleWidth/2;
         const float paddleTop = paddlePos.y + paddleHeight/2;
         const float paddleBottom = paddlePos.y - paddleHeight/2;
-        
+
         // Calculate penetration depths on each axis
         const float penetrationLeft = ballPos.x + ballSize - paddleLeft;
         const float penetrationRight = paddleRight - (ballPos.x - ballSize);
         const float penetrationTop = paddleTop - (ballPos.y - ballSize);
         const float penetrationBottom = ballPos.y + ballSize - paddleBottom;
-        
+
         // Find minimum penetration to determine collision side
         float minPenetration = penetrationLeft;
         enum CollisionSide { LEFT, RIGHT, TOP, BOTTOM } side = LEFT;
-        
+
         if (penetrationRight < minPenetration) {
             minPenetration = penetrationRight;
             side = RIGHT;
         }
-        
+
         if (penetrationTop < minPenetration) {
             minPenetration = penetrationTop;
             side = TOP;
         }
-        
+
         if (penetrationBottom < minPenetration) {
             minPenetration = penetrationBottom;
             side = BOTTOM;
         }
-        
+
         // Apply reflection and position correction based on collision side
         auto ballVelocity = ball.getVelocity();
         auto newBallPos = ballPos;
-        
+
         switch (side) {
             case LEFT:
                 newBallPos.x = paddleLeft - ballSize;
                 ballVelocity.x = -std::abs(ballVelocity.x); // Ensure moving left
                 break;
-                
+
             case RIGHT:
                 newBallPos.x = paddleRight + ballSize;
                 ballVelocity.x = std::abs(ballVelocity.x); // Ensure moving right
                 break;
-                
+
             case TOP:
                 newBallPos.y = paddleTop + ballSize;
                 ballVelocity.y = std::abs(ballVelocity.y); // Ensure moving up
                 break;
-                
+
             case BOTTOM:
                 newBallPos.y = paddleBottom - ballSize;
                 ballVelocity.y = -std::abs(ballVelocity.y); // Ensure moving down
                 break;
         }
-        
-        // Add some randomness/angle to the bounce based on where it hit the paddle
+
+        // Use paddle velocity to influence the ball's trajectory on collision
         // (only for horizontal collisions)
         if (side == LEFT || side == RIGHT) {
-            // Calculate relative hit position on the paddle (-1 to 1, where 0 is center)
-            float relativeHitPos = (ballPos.y - paddlePos.y) / (paddleHeight/2);
+            // Get paddle's velocity
+            Vec2 paddleVel = paddle.getVelocity();
             
-            // Apply y-velocity change based on hit position
-            // This adds more vertical movement when hitting away from the center
-            ballVelocity.y += relativeHitPos * 150.0f;
+            // Transfer some of paddle's y-velocity to the ball (with a multiplier for effect)
+            const float paddleInfluence = 0.75f;  // How much paddle motion affects ball
+            
+            // Add paddle's velocity component to the ball's velocity
+            ballVelocity.y += paddleVel.y * paddleInfluence;
+            
+            // Optional: Cap the maximum vertical velocity to prevent extreme angles
+            const float maxVerticalVelocity = 350.0f;
+            if (ballVelocity.y > maxVerticalVelocity) {
+                ballVelocity.y = maxVerticalVelocity;
+            } else if (ballVelocity.y < -maxVerticalVelocity) {
+                ballVelocity.y = -maxVerticalVelocity;
+            }
         }
-        
+
         // Update ball position and velocity
         ball.setPosition(newBallPos);
         ball.setVelocity(ballVelocity);
@@ -180,12 +190,18 @@ void Pong::Game::handleBallPaddleCollisions(const Paddle& paddle) {
 }
 
 void Pong::Game::updatePaddles(const float deltaTime) {
+    player1.setVelocity(Vec2::Zero());
+    player2.setVelocity(Vec2::Zero());
     if (!input.isPlayer1UpPressed && input.isPlayer1DownPressed) {
         auto position = player1.getPosition();
         const auto desiredHeight = position.y + 300.0f * deltaTime;
         const auto maxHeight = boundary.getHeight() - player1.getHeight() / 2;
         position.y = std::min(desiredHeight, maxHeight);
         player1.setPosition(position);
+
+        auto velocity = player1.getVelocity();
+        velocity.y = 300.0f;
+        player1.setVelocity(velocity);
     }
 
     if (input.isPlayer1UpPressed && !input.isPlayer1DownPressed) {
@@ -194,6 +210,10 @@ void Pong::Game::updatePaddles(const float deltaTime) {
         const auto minHeight = player1.getHeight() / 2;
         position.y = std::max(desiredHeight, minHeight);
         player1.setPosition(position);
+
+        auto velocity = player1.getVelocity();
+        velocity.y = -300.0f;
+        player1.setVelocity(velocity);
     }
 
     if (!input.isPlayer2UpPressed && input.isPlayer2DownPressed) {
@@ -202,6 +222,10 @@ void Pong::Game::updatePaddles(const float deltaTime) {
         const auto maxHeight = boundary.getHeight() - player2.getHeight() / 2;
         position.y = std::min(desiredHeight, maxHeight);
         player2.setPosition(position);
+
+        auto velocity = player2.getVelocity();
+        velocity.y = 300.0f;
+        player2.setVelocity(velocity);
     }
 
     if (input.isPlayer2UpPressed && !input.isPlayer2DownPressed) {
@@ -210,5 +234,9 @@ void Pong::Game::updatePaddles(const float deltaTime) {
         const auto minHeight = player2.getHeight() / 2;
         position.y = std::max(desiredHeight, minHeight);
         player2.setPosition(position);
+
+        auto velocity = player2.getVelocity();
+        velocity.y = -300.0f;
+        player2.setVelocity(velocity);
     }
 }

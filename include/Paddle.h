@@ -17,6 +17,9 @@ namespace Pong {
         Vec2 getPosition() const;
         void setPosition(const Vec2 &newPosition);
 
+        Vec2 getVelocity() const;
+        void setVelocity(const Vec2 &newVelocity);
+
         float getHeight() const;
         float getWidth() const;
 
@@ -25,6 +28,7 @@ namespace Pong {
         float width;
         CollisionBox collision_box;
         Vec2 position;
+        Vec2 velocity;
     };
 } // Pong
 

@@ -3,6 +3,8 @@
 
 namespace Pong {
     struct Vec2 {
+        static Vec2 Zero();
+
         Vec2(float x, float y);
 
         float x, y;
