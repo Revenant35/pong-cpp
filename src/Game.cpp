@@ -46,6 +46,7 @@ void Pong::Game::update(const float delta_time) {
 void Pong::Game::render() const {
     renderer.clear();
 
+    renderer.drawCenterLine();
     renderer.drawPaddle(player1);
     renderer.drawPaddle(player2);
     renderer.drawBall(ball);

@@ -30,7 +30,8 @@ exec_sources = files(
 
 lib_dependencies = [
     dependency('spdlog', fallback : ['spdlog', 'spdlog_dep']),
-    dependency('sdl2', version : '>=2.0.10', fallback : ['sdl2', 'sdl2_dep'])
+    dependency('sdl2', version : '>=2.0.10', fallback : ['sdl2', 'sdl2_dep']),
+    dependency('sdl2_ttf', version : '>=2.0.15', fallback : ['sdl2_ttf', 'sdl2_ttf_dep'])
 ]
 
 test_dependencies = [
