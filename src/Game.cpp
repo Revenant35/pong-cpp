@@ -75,24 +75,16 @@ void Pong::Game::handleBallWallCollisions() {
         ball.setVelocity(ballVelocity);
     }
 
+    // Player 2 scores (ball hits left wall)
     if (boundary.isCollidingWithLeftWall(ball.getCollisionBox())) {
-        auto ballPosition = ball.getPosition();
-        ballPosition.x = ball.getSize();
-        ball.setPosition(ballPosition);
-
-        auto ballVelocity = ball.getVelocity();
-        ballVelocity.x = -ballVelocity.x;
-        ball.setVelocity(ballVelocity);
+        score2++;
+        resetPositions();
     }
 
+    // Player 1 scores (ball hits right wall)
     if (boundary.isCollidingWithRightWall(ball.getCollisionBox())) {
-        auto ballPosition = ball.getPosition();
-        ballPosition.x = boundary.getWidth() - ball.getSize();
-        ball.setPosition(ballPosition);
-
-        auto ballVelocity = ball.getVelocity();
-        ballVelocity.x = -ballVelocity.x;
-        ball.setVelocity(ballVelocity);
+        score1++;
+        resetPositions();
     }
 }
 
@@ -187,6 +179,25 @@ void Pong::Game::handleBallPaddleCollisions(const Paddle& paddle) {
         ball.setPosition(newBallPos);
         ball.setVelocity(ballVelocity);
     }
+}
+
+void Pong::Game::resetPositions() {
+    // Reset ball position to center
+    ball.setPosition(Vec2(boundary.getWidth() / 2.0f, boundary.getHeight() / 2.0f));
+    
+    // Reset ball velocity with a random direction to keep gameplay interesting
+    float speed = 250.0f;
+    float directionX = (rand() % 2 == 0) ? 1.0f : -1.0f; // Randomly choose left or right
+    float directionY = ((float)rand() / RAND_MAX * 2.0f - 1.0f) * 0.7f; // Random Y direction between -0.7 and 0.7
+    ball.setVelocity(Vec2(speed * directionX, speed * directionY));
+    
+    // Reset paddle positions
+    player1.setPosition(Vec2(50.0f, boundary.getHeight() / 2.0f));
+    player2.setPosition(Vec2(boundary.getWidth() - 50.0f, boundary.getHeight() / 2.0f));
+    
+    // Reset paddle velocities
+    player1.setVelocity(Vec2::Zero());
+    player2.setVelocity(Vec2::Zero());
 }
 
 void Pong::Game::updatePaddles(const float deltaTime) {

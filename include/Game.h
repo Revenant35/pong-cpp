@@ -31,6 +31,7 @@ namespace Pong {
         void render() const;
         void handleBallWallCollisions();
         void handleBallPaddleCollisions(const Paddle& paddle);
+        void resetPositions();
 
         void updatePaddles(float deltaTime);
     };
